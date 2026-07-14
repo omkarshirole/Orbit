@@ -5,12 +5,6 @@ import { QueryProvider } from "@/components/query-provider";
 
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
-export const metadata: Metadata = {
-  title: "Orbit Order Hub",
-  description: "Every order. One orbit.",
-  metadataBase: new URL(process.env.PUBLIC_APP_URL || "http://localhost:3000"),
-};
-
 const RTRVR_ATTRS = [
   "rtrvr-ls",
   "rtrvr-mw-ready",
@@ -37,17 +31,29 @@ const stripRtrvrAttrs = `
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", clean);
     }
+    new MutationObserver(clean).observe(document.documentElement, { attributes: true, subtree: true, attributeFilter: attrs });
   })();
 `;
+
+export const metadata: Metadata = {
+  title: "Orbit Order Hub",
+  description: "Every order. One orbit.",
+  metadataBase: new URL(process.env.PUBLIC_APP_URL || "http://localhost:3000"),
+};
 
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{ __html: stripRtrvrAttrs }}
+          suppressHydrationWarning
+        />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         <QueryProvider>{children}</QueryProvider>
-        <script dangerouslySetInnerHTML={{ __html: stripRtrvrAttrs }} />
       </body>
     </html>
   );

@@ -1,4 +1,6 @@
-import { clsx } from "clsx";
+"use client";
+
+import { UIStatusBadge } from "./badge";
 import type { OrderStatus } from "@/lib/constants";
 
 const statusLabel: Record<OrderStatus, string> = {
@@ -22,34 +24,35 @@ const statusLabel: Record<OrderStatus, string> = {
   unknown: "Unknown",
 };
 
-const tone: Partial<Record<OrderStatus, string>> = {
-  delivered: "bg-green-50 text-orbit-green ring-green-200",
-  out_for_delivery: "bg-amber-50 text-orbit-orange ring-amber-200",
-  delayed: "bg-red-50 text-orbit-red ring-red-200",
-  failed: "bg-red-50 text-orbit-red ring-red-200",
-  shipped: "bg-indigo-50 text-orbit-primary ring-indigo-200",
-  in_transit: "bg-blue-50 text-orbit-blue ring-blue-200",
-  arriving_soon: "bg-indigo-50 text-orbit-primary ring-indigo-200",
-  cancelled: "bg-gray-50 text-orbit-muted ring-gray-200",
-  return_requested: "bg-purple-50 text-purple-700 ring-purple-200",
-  return_in_transit: "bg-purple-50 text-purple-700 ring-purple-200",
-  returned: "bg-purple-50 text-purple-700 ring-purple-200",
-  refund_processing: "bg-purple-50 text-purple-700 ring-purple-200",
-  refunded: "bg-green-50 text-orbit-green ring-green-200",
-  ordered: "bg-gray-50 text-orbit-muted ring-gray-200",
-  confirmed: "bg-gray-50 text-orbit-muted ring-gray-200",
-  processing: "bg-gray-50 text-orbit-muted ring-gray-200",
+const statusVariant: Record<OrderStatus, StatusBadgeProps["status"]> = {
+  ordered: "ordered",
+  confirmed: "confirmed",
+  processing: "processing",
+  shipped: "shipped",
+  in_transit: "in_transit",
+  arriving_soon: "arriving_soon",
+  out_for_delivery: "out_for_delivery",
+  delivered: "delivered",
+  delayed: "delayed",
+  delivery_attempted: "delivery_attempted",
+  failed: "failed",
+  cancelled: "cancelled",
+  return_requested: "return_requested",
+  return_in_transit: "return_in_transit",
+  returned: "returned",
+  refund_processing: "refund_processing",
+  refunded: "refunded",
+  unknown: "neutral",
+};
+
+type StatusBadgeProps = {
+  status?: "default" | "primary" | "success" | "warning" | "danger" | "info" | "neutral" 
+    | "ordered" | "confirmed" | "processing" | "shipped" | "in_transit" | "out_for_delivery" 
+    | "arriving_soon" | "delivered" | "delayed" | "delivery_attempted" | "failed" 
+    | "cancelled" | "return_requested" | "return_in_transit" | "returned" 
+    | "refund_processing" | "refunded";
 };
 
 export function StatusBadge({ status }: { status: OrderStatus }) {
-  return (
-    <span
-      className={clsx(
-        "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1",
-        tone[status] || "bg-white text-orbit-muted ring-orbit-line",
-      )}
-    >
-      {statusLabel[status]}
-    </span>
-  );
+  return <UIStatusBadge status={statusVariant[status] || "neutral"}>{statusLabel[status]}</UIStatusBadge>;
 }
