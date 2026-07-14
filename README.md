@@ -38,6 +38,7 @@
 ## ✨ Features
 
 ### 📧 Gmail Integration
+
 - **OAuth 2.0 with granular scopes** – Sign in with Google (identity only), then explicitly grant Gmail read access from the dashboard
 - **Encrypted token storage** – AES-256-GCM encryption for access/refresh tokens before persisting to Supabase
 - **Automated sync** – Background job scans purchase-related emails (last 180 days) and extracts order/tracking data
@@ -45,12 +46,14 @@
 - **Deduplication** – Upserts by `source_message_id`, `external_order_id`, or `tracking_number`
 
 ### 📦 AfterShip Tracking
+
 - **Real-time webhooks** – HMAC-SHA256 verified webhook endpoint for instant courier updates
 - **Courier auto-detection** – AfterShip courier detection API for unknown tracking numbers
 - **Tracking registration** – Register pending shipments to AfterShip on demand
 - **Event normalization** – Maps AfterShip checkpoints to unified `OrderStatus` enum
 
 ### 🎯 Dashboard
+
 - **Real-time updates** – Supabase Realtime subscriptions for orders, tracking events, notifications
 - **Smart filters** – Active, Shipped, Delivered, Delayed, Returns, Cancelled, Arriving Today
 - **Search** – Full-text search across product name, store, order ID, tracking number
@@ -58,6 +61,7 @@
 - **Manual order entry** – Add orders with tracking numbers when email parsing misses them
 
 ### 🔒 Security First
+
 - **Row Level Security (RLS)** – Every table scoped to `auth.uid()`; no cross-user data leaks
 - **Encrypted secrets** – Gmail tokens encrypted at rest; `gmail_tokens` table revoked from `anon`/`authenticated` roles
 - **Signed OAuth state** – HMAC-signed, timestamped, nonce-protected state parameter for Gmail OAuth flow
@@ -94,13 +98,13 @@
 
 ### Data Flow
 
-| Flow | Description |
-|------|-------------|
-| **Auth** | Supabase Google OAuth → Session cookie → Server/client clients |
+| Flow              | Description                                                                                          |
+| ----------------- | ---------------------------------------------------------------------------------------------------- |
+| **Auth**          | Supabase Google OAuth → Session cookie → Server/client clients                                       |
 | **Gmail Connect** | User clicks "Connect Gmail" → Signed OAuth state → Google consent → Callback stores encrypted tokens |
-| **Sync** | POST `/api/gmail/sync` → Fetch messages → Parse → Upsert orders/shipments → Register with AfterShip |
-| **Webhook** | AfterShip POST → Verify HMAC → Parse events → Upsert tracking_events → Update order status → Notify |
-| **Realtime** | Supabase Realtime → TanStack Query invalidation → UI updates instantly |
+| **Sync**          | POST `/api/gmail/sync` → Fetch messages → Parse → Upsert orders/shipments → Register with AfterShip  |
+| **Webhook**       | AfterShip POST → Verify HMAC → Parse events → Upsert tracking_events → Update order status → Notify  |
+| **Realtime**      | Supabase Realtime → TanStack Query invalidation → UI updates instantly                               |
 
 ### Database Schema (Supabase)
 
@@ -145,6 +149,7 @@ cp .env.example .env.local
 Fill in all variables in `.env.local` (see [Environment Variables](#environment-variables)).
 
 **Generate encryption key:**
+
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 # Paste output as TOKEN_ENCRYPTION_KEY
@@ -196,20 +201,20 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ## 🔐 Environment Variables
 
-| Variable | Required | Description | Example |
-|----------|----------|-------------|---------|
-| `PUBLIC_APP_URL` | ✅ | Canonical app URL (no trailing slash) | `http://localhost:3000` |
-| `SUPABASE_URL` | ✅ | Supabase project URL (server) | `https://xxx.supabase.co` |
-| `SUPABASE_PUBLISHABLE_KEY` | ✅ | Supabase anon key (server) | `eyJ...` |
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase URL (browser) | `https://xxx.supabase.co` |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | ✅ | Supabase anon key (browser) | `eyJ...` |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Service role key (server only) | `eyJ...` |
-| `GOOGLE_OAUTH_CLIENT_ID` | ✅ | Google OAuth client ID | `123.apps.googleusercontent.com` |
-| `GOOGLE_OAUTH_CLIENT_SECRET` | ✅ | Google OAuth client secret | `GOCSPX...` |
-| `GMAIL_OAUTH_STATE_SECRET` | ✅ | Random string for signing OAuth state | `openssl rand -base64 32` |
-| `AFTERSHIP_API_KEY` | ✅ | AfterShip API key | `xxx-xxx-xxx` |
-| `AFTERSHIP_WEBHOOK_SECRET` | ✅ | AfterShip webhook signing secret | `whsec_...` |
-| `TOKEN_ENCRYPTION_KEY` | ✅ | Base64 32-byte key for token encryption | `node -e "..."` |
+| Variable                               | Required | Description                             | Example                          |
+| -------------------------------------- | -------- | --------------------------------------- | -------------------------------- |
+| `PUBLIC_APP_URL`                       | ✅       | Canonical app URL (no trailing slash)   | `http://localhost:3000`          |
+| `SUPABASE_URL`                         | ✅       | Supabase project URL (server)           | `https://xxx.supabase.co`        |
+| `SUPABASE_PUBLISHABLE_KEY`             | ✅       | Supabase anon key (server)              | `eyJ...`                         |
+| `NEXT_PUBLIC_SUPABASE_URL`             | ✅       | Supabase URL (browser)                  | `https://xxx.supabase.co`        |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | ✅       | Supabase anon key (browser)             | `eyJ...`                         |
+| `SUPABASE_SERVICE_ROLE_KEY`            | ✅       | Service role key (server only)          | `eyJ...`                         |
+| `GOOGLE_OAUTH_CLIENT_ID`               | ✅       | Google OAuth client ID                  | `123.apps.googleusercontent.com` |
+| `GOOGLE_OAUTH_CLIENT_SECRET`           | ✅       | Google OAuth client secret              | `GOCSPX...`                      |
+| `GMAIL_OAUTH_STATE_SECRET`             | ✅       | Random string for signing OAuth state   | `openssl rand -base64 32`        |
+| `AFTERSHIP_API_KEY`                    | ✅       | AfterShip API key                       | `xxx-xxx-xxx`                    |
+| `AFTERSHIP_WEBHOOK_SECRET`             | ✅       | AfterShip webhook signing secret        | `whsec_...`                      |
+| `TOKEN_ENCRYPTION_KEY`                 | ✅       | Base64 32-byte key for token encryption | `node -e "..."`                  |
 
 > **Never commit `.env.local`** – it's in `.gitignore`.
 
@@ -218,38 +223,44 @@ Open [http://localhost:3000](http://localhost:3000)
 ## 📡 API Reference
 
 ### Authentication
+
 - `GET /api/auth/callback` – Supabase OAuth callback handler
 
 ### Gmail
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `POST` | `/api/gmail/connect` | Returns Google OAuth URL for Gmail scope |
-| `GET` | `/api/public/gmail-oauth-callback` | OAuth callback; stores encrypted tokens |
-| `POST` | `/api/gmail/sync` | Triggers Gmail order sync (auth required) |
-| `POST` | `/api/gmail/disconnect` | Revokes tokens & optionally deletes imported orders |
+
+| Method | Endpoint                           | Description                                         |
+| ------ | ---------------------------------- | --------------------------------------------------- |
+| `POST` | `/api/gmail/connect`               | Returns Google OAuth URL for Gmail scope            |
+| `GET`  | `/api/public/gmail-oauth-callback` | OAuth callback; stores encrypted tokens             |
+| `POST` | `/api/gmail/sync`                  | Triggers Gmail order sync (auth required)           |
+| `POST` | `/api/gmail/disconnect`            | Revokes tokens & optionally deletes imported orders |
 
 ### Orders
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/orders` | List orders with filters (`q`, `filter`) |
-| `POST` | `/api/orders` | Create manual order with tracking |
-| `GET` | `/api/orders/[id]` | Get order with shipments & events |
-| `DELETE` | `/api/orders/[id]` | Delete order (cascades) |
+
+| Method   | Endpoint           | Description                              |
+| -------- | ------------------ | ---------------------------------------- |
+| `GET`    | `/api/orders`      | List orders with filters (`q`, `filter`) |
+| `POST`   | `/api/orders`      | Create manual order with tracking        |
+| `GET`    | `/api/orders/[id]` | Get order with shipments & events        |
+| `DELETE` | `/api/orders/[id]` | Delete order (cascades)                  |
 
 ### Tracking
-| Method | Endpoint | Description |
-|--------|----------|-------------|
+
+| Method | Endpoint                         | Description                                  |
+| ------ | -------------------------------- | -------------------------------------------- |
 | `POST` | `/api/tracking/register-pending` | Register unregistered shipments to AfterShip |
 
 ### Notifications
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| `GET` | `/api/notifications` | List recent notifications |
+
+| Method  | Endpoint             | Description                                                |
+| ------- | -------------------- | ---------------------------------------------------------- |
+| `GET`   | `/api/notifications` | List recent notifications                                  |
 | `PATCH` | `/api/notifications` | Mark as read (`{ notificationId }` or `{ markAll: true }`) |
 
 ### Webhooks (Public)
-| Method | Endpoint | Description |
-|--------|----------|-------------|
+
+| Method | Endpoint                        | Description                                |
+| ------ | ------------------------------- | ------------------------------------------ |
 | `POST` | `/api/public/aftership-webhook` | AfterShip tracking updates (HMAC verified) |
 
 ---
@@ -405,25 +416,25 @@ docker run -p 3000:3000 --env-file .env.local orbit-order-hub
 
 ## 🔒 Security
 
-| Measure | Implementation |
-|---------|----------------|
-| **Token Encryption** | AES-256-GCM with 32-byte base64 key (`TOKEN_ENCRYPTION_KEY`) |
-| **OAuth State** | HMAC-SHA256 signed, 10-min TTL, nonce, user-bound |
-| **Webhook Verification** | HMAC-SHA256, base64, timing-safe comparison |
-| **RLS** | All tables: `auth.uid() = user_id`; `gmail_tokens` revoked from all roles |
-| **Secrets** | Server-only env vars; `NEXT_PUBLIC_*` only for Supabase anon key |
-| **Input Validation** | Zod schemas on all API inputs |
-| **HTML Sanitization** | Raw email HTML never rendered |
+| Measure                  | Implementation                                                            |
+| ------------------------ | ------------------------------------------------------------------------- |
+| **Token Encryption**     | AES-256-GCM with 32-byte base64 key (`TOKEN_ENCRYPTION_KEY`)              |
+| **OAuth State**          | HMAC-SHA256 signed, 10-min TTL, nonce, user-bound                         |
+| **Webhook Verification** | HMAC-SHA256, base64, timing-safe comparison                               |
+| **RLS**                  | All tables: `auth.uid() = user_id`; `gmail_tokens` revoked from all roles |
+| **Secrets**              | Server-only env vars; `NEXT_PUBLIC_*` only for Supabase anon key          |
+| **Input Validation**     | Zod schemas on all API inputs                                             |
+| **HTML Sanitization**    | Raw email HTML never rendered                                             |
 
 ### Threat Model
 
-| Threat | Mitigation |
-|--------|------------|
-| Token theft from DB | AES-256-GCM encryption at rest |
-| OAuth replay/CSRF | Signed state with nonce, TTL, user binding |
-| Webhook spoofing | HMAC verification + timing-safe compare |
-| Cross-user data access | RLS policies on every table |
-| XSS via email content | Text-only extraction; no HTML rendering |
+| Threat                 | Mitigation                                 |
+| ---------------------- | ------------------------------------------ |
+| Token theft from DB    | AES-256-GCM encryption at rest             |
+| OAuth replay/CSRF      | Signed state with nonce, TTL, user binding |
+| Webhook spoofing       | HMAC verification + timing-safe compare    |
+| Cross-user data access | RLS policies on every table                |
+| XSS via email content  | Text-only extraction; no HTML rendering    |
 
 ---
 

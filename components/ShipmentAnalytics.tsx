@@ -27,15 +27,20 @@ export function ShipmentAnalytics() {
             const height = (item.value / maxValue) * 100;
             const isPeak = item.value === maxValue;
             return (
-              <div key={`${item.day}-${index}`} className="flex-1 flex flex-col items-center gap-1">
+              <div
+                key={`${item.day}-${index}`}
+                className="flex-1 flex flex-col items-center gap-1"
+              >
                 <div
                   className={clsx(
-                    "w-full rounded-t transition-all duration-500",
-                    isPeak ? "bg-green-800" : "bg-green-400"
+                    "w-full rounded-full transition-all duration-500",
+                    isPeak ? "bg-green-700" : "bg-green-200",
                   )}
-                  style={{ height: `${height}%` }}
+                  style={{ height: `${height}%`, minHeight: "8px" }}
                 />
-                <span className="text-xs font-medium text-[#8d9890]">{item.day}</span>
+                <span className="text-xs font-medium text-[#8d9890]">
+                  {item.day}
+                </span>
               </div>
             );
           })}

@@ -46,13 +46,37 @@ const statusVariant: Record<OrderStatus, StatusBadgeProps["status"]> = {
 };
 
 type StatusBadgeProps = {
-  status?: "default" | "primary" | "success" | "warning" | "danger" | "info" | "neutral" 
-    | "ordered" | "confirmed" | "processing" | "shipped" | "in_transit" | "out_for_delivery" 
-    | "arriving_soon" | "delivered" | "delayed" | "delivery_attempted" | "failed" 
-    | "cancelled" | "return_requested" | "return_in_transit" | "returned" 
-    | "refund_processing" | "refunded";
+  status?:
+    | "default"
+    | "primary"
+    | "success"
+    | "warning"
+    | "danger"
+    | "info"
+    | "neutral"
+    | "ordered"
+    | "confirmed"
+    | "processing"
+    | "shipped"
+    | "in_transit"
+    | "out_for_delivery"
+    | "arriving_soon"
+    | "delivered"
+    | "delayed"
+    | "delivery_attempted"
+    | "failed"
+    | "cancelled"
+    | "return_requested"
+    | "return_in_transit"
+    | "returned"
+    | "refund_processing"
+    | "refunded";
 };
 
 export function StatusBadge({ status }: { status: OrderStatus }) {
-  return <UIStatusBadge status={statusVariant[status] || "neutral"}>{statusLabel[status]}</UIStatusBadge>;
+  return (
+    <UIStatusBadge status={statusVariant[status] || "neutral"}>
+      {statusLabel[status]}
+    </UIStatusBadge>
+  );
 }

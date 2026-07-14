@@ -10,15 +10,32 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", isLoading, disabled, children, ...props }, ref) => {
-    const baseStyles = "inline-flex items-center justify-center font-medium rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
+  (
+    {
+      className,
+      variant = "primary",
+      size = "md",
+      isLoading,
+      disabled,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
+    const baseStyles =
+      "inline-flex items-center justify-center font-medium rounded-full transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500/50 focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed";
 
     const variants = {
-      primary: "bg-green-800 text-white hover:bg-green-900 active:bg-green-950 shadow-sm",
-      secondary: "bg-white text-green-800 border border-green-200 hover:bg-green-50 active:bg-green-100 shadow-sm",
-      outline: "bg-transparent text-green-700 border border-green-300 hover:bg-green-50 active:bg-green-100",
-      ghost: "bg-transparent text-green-700 hover:bg-green-50 active:bg-green-100",
-      danger: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm",
+      primary:
+        "bg-green-800 text-white hover:bg-green-900 active:bg-green-950 shadow-sm",
+      secondary:
+        "bg-white text-green-800 border border-green-200 hover:bg-green-50 active:bg-green-100 shadow-sm",
+      outline:
+        "bg-transparent text-green-700 border border-green-300 hover:bg-green-50 active:bg-green-100",
+      ghost:
+        "bg-transparent text-green-700 hover:bg-green-50 active:bg-green-100",
+      danger:
+        "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm",
     };
 
     const sizes = {
@@ -35,11 +52,15 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={disabled || isLoading}
         {...props}
       >
-        {isLoading && <span className="animate-spin h-4 w-4" aria-hidden="true">⏳</span>}
+        {isLoading && (
+          <span className="animate-spin h-4 w-4" aria-hidden="true">
+            ⏳
+          </span>
+        )}
         {children}
       </button>
     );
-  }
+  },
 );
 
 Button.displayName = "Button";

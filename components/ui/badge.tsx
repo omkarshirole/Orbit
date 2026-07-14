@@ -71,40 +71,63 @@ export const UIStatusBadge = forwardRef<HTMLSpanElement, StatusBadgeProps>(
           "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1",
           statusVariants[status] || statusVariants.default,
           status !== "default" && "ring-transparent",
-          className
+          className,
         )}
         {...props}
       >
-{dot && (
-            <span
-              className={clsx(
-                "h-1.5 w-1.5 rounded-full",
-                status === "delivered" || status === "success" || status === "refunded"
-                  ? "bg-green-500"
-                  : status === "out_for_delivery" || status === "warning"
+        {dot && (
+          <span
+            className={clsx(
+              "h-1.5 w-1.5 rounded-full",
+              status === "delivered" ||
+                status === "success" ||
+                status === "refunded"
+                ? "bg-green-500"
+                : status === "out_for_delivery" || status === "warning"
                   ? "bg-amber-500"
-                  : status === "delayed" || status === "danger" || status === "failed" || status === "delivery_attempted"
-                  ? "bg-red-500"
-                  : status === "shipped" || status === "in_transit" || status === "info" || status === "arriving_soon"
-                  ? "bg-blue-500"
-                  : status === "cancelled" || status === "default" || status === "neutral" || status === "ordered" || status === "confirmed" || status === "processing"
-                  ? "bg-gray-500"
-                  : status === "return_requested" || status === "return_in_transit" || status === "returned" || status === "refund_processing"
-                  ? "bg-purple-500"
-                  : "bg-gray-500"
-              )}
-            />
-          )}
+                  : status === "delayed" ||
+                      status === "danger" ||
+                      status === "failed" ||
+                      status === "delivery_attempted"
+                    ? "bg-red-500"
+                    : status === "shipped" ||
+                        status === "in_transit" ||
+                        status === "info" ||
+                        status === "arriving_soon"
+                      ? "bg-blue-500"
+                      : status === "cancelled" ||
+                          status === "default" ||
+                          status === "neutral" ||
+                          status === "ordered" ||
+                          status === "confirmed" ||
+                          status === "processing"
+                        ? "bg-gray-500"
+                        : status === "return_requested" ||
+                            status === "return_in_transit" ||
+                            status === "returned" ||
+                            status === "refund_processing"
+                          ? "bg-purple-500"
+                          : "bg-gray-500",
+            )}
+          />
+        )}
         {children}
       </span>
     );
-  }
+  },
 );
 
 UIStatusBadge.displayName = "UIStatusBadge";
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
-  variant?: "default" | "primary" | "success" | "warning" | "danger" | "info" | "outline";
+  variant?:
+    | "default"
+    | "primary"
+    | "success"
+    | "warning"
+    | "danger"
+    | "info"
+    | "outline";
   size?: "sm" | "md" | "lg";
 }
 
@@ -125,7 +148,10 @@ const badgeSizes = {
 };
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
-  ({ className, variant = "default", size = "md", children, ...props }, ref) => {
+  (
+    { className, variant = "default", size = "md", children, ...props },
+    ref,
+  ) => {
     return (
       <span
         ref={ref}
@@ -135,14 +161,14 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
           variant !== "outline" && "ring-transparent",
           variant === "outline" && "ring-[#edf0ec]",
           badgeSizes[size],
-          className
+          className,
         )}
         {...props}
       >
         {children}
       </span>
     );
-  }
+  },
 );
 
 Badge.displayName = "Badge";

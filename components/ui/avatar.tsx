@@ -1,7 +1,14 @@
 "use client";
 
 import { clsx } from "clsx";
-import { forwardRef, type HTMLAttributes, useState, isValidElement, cloneElement, type ReactElement } from "react";
+import {
+  forwardRef,
+  type HTMLAttributes,
+  useState,
+  isValidElement,
+  cloneElement,
+  type ReactElement,
+} from "react";
 
 export interface AvatarProps extends HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -21,7 +28,10 @@ const sizes = {
 };
 
 export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
-  ({ className, src, alt, fallback, size = "md", shape = "circle", ...props }, ref) => {
+  (
+    { className, src, alt, fallback, size = "md", shape = "circle", ...props },
+    ref,
+  ) => {
     const [imageError, setImageError] = useState(false);
 
     const getInitials = (name: string) => {
@@ -42,7 +52,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
           "inline-flex items-center justify-center overflow-hidden bg-[#edf0ec] flex-shrink-0",
           sizes[size],
           shape === "circle" ? "rounded-full" : "rounded-xl",
-          className
+          className,
         )}
         {...props}
       >
@@ -59,7 +69,7 @@ export const Avatar = forwardRef<HTMLDivElement, AvatarProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Avatar.displayName = "Avatar";
@@ -76,28 +86,25 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
     const remainingCount = childArray.length - max;
 
     return (
-      <div
-        ref={ref}
-        className={clsx("flex -space-x-2", className)}
-        {...props}
-      >
+      <div ref={ref} className={clsx("flex -space-x-2", className)} {...props}>
         {visibleChildren.map((child, index) =>
-          isValidElement<AvatarProps>(child) ? (
-            cloneElement(child, {
-              key: index,
-              size,
-              className: clsx("ring-2 ring-white border-0", child.props.className),
-            })
-          ) : (
-            child
-          )
+          isValidElement<AvatarProps>(child)
+            ? cloneElement(child, {
+                key: index,
+                size,
+                className: clsx(
+                  "ring-2 ring-white border-0",
+                  child.props.className,
+                ),
+              })
+            : child,
         )}
         {remainingCount > 0 && (
           <div
             className={clsx(
               "inline-flex items-center justify-center overflow-hidden bg-green-100 text-green-700 font-medium ring-2 ring-white border-0",
               sizes[size],
-              "rounded-full"
+              "rounded-full",
             )}
           >
             +{remainingCount}
@@ -105,7 +112,7 @@ export const AvatarGroup = forwardRef<HTMLDivElement, AvatarGroupProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 AvatarGroup.displayName = "AvatarGroup";

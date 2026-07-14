@@ -8,7 +8,10 @@ import { clsx } from "clsx";
 
 export function GmailSync() {
   return (
-    <Card variant="elevated" className="h-full bg-gradient-to-br from-green-900 to-green-800 text-white">
+    <Card
+      variant="elevated"
+      className="h-full bg-gradient-to-br from-green-900 to-green-800 text-white"
+    >
       <CardHeader className="pb-2 flex items-center justify-between">
         <CardTitle className="text-white">Gmail Sync</CardTitle>
         <div className="flex items-center gap-2">
@@ -29,11 +32,19 @@ export function GmailSync() {
         </div>
 
         <div className="flex items-center gap-4 w-full max-w-xs">
-          <Button variant="outline" className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20" size="md">
+          <Button
+            variant="outline"
+            className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
+            size="md"
+          >
             <PauseCircle className="h-4 w-4 mr-2" />
             Pause
           </Button>
-          <Button variant="primary" className="flex-1 bg-white text-green-900 hover:bg-green-100" size="md">
+          <Button
+            variant="primary"
+            className="flex-1 bg-white text-green-900 hover:bg-green-100"
+            size="md"
+          >
             <RotateCcw className="h-4 w-4 mr-2" />
             Sync Now
           </Button>

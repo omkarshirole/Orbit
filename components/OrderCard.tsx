@@ -32,7 +32,10 @@ interface OrderCardProps {
   source: "gmail" | "manual";
 }
 
-const statusIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+const statusIcons: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   out_for_delivery: Truck,
   in_transit: Truck,
   delayed: AlertTriangle,
@@ -60,15 +63,37 @@ export function OrderCard({
     <article className="rounded-2xl border border-[#edf0ec] bg-white shadow-sm hover:shadow-md transition-shadow">
       <div className="p-4 sm:p-6">
         <div className="flex flex-col sm:flex-row gap-4 sm:items-start">
-          <div className={clsx("flex h-16 w-16 shrink-0 items-center justify-center rounded-xl", status === "out_for_delivery" && "bg-amber-100", status === "in_transit" && "bg-green-100", status === "delayed" && "bg-red-100", status === "delivered" && "bg-green-100", status === "shipped" && "bg-blue-100")}>
-            <Icon className={clsx("h-8 w-8", status === "out_for_delivery" && "text-amber-600", status === "in_transit" && "text-green-600", status === "delayed" && "text-red-600", status === "delivered" && "text-green-600", status === "shipped" && "text-blue-600")} />
+          <div
+            className={clsx(
+              "flex h-16 w-16 shrink-0 items-center justify-center rounded-xl",
+              status === "out_for_delivery" && "bg-amber-100",
+              status === "in_transit" && "bg-green-100",
+              status === "delayed" && "bg-red-100",
+              status === "delivered" && "bg-green-100",
+              status === "shipped" && "bg-blue-100",
+            )}
+          >
+            <Icon
+              className={clsx(
+                "h-8 w-8",
+                status === "out_for_delivery" && "text-amber-600",
+                status === "in_transit" && "text-green-600",
+                status === "delayed" && "text-red-600",
+                status === "delivered" && "text-green-600",
+                status === "shipped" && "text-blue-600",
+              )}
+            />
           </div>
 
           <div className="flex-1 min-w-0">
             <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2">
               <div>
-                <h3 className="font-semibold text-[#111111] truncate">{productName}</h3>
-                <p className="text-sm text-[#8d9890]">{store} · {orderNumber}</p>
+                <h3 className="font-semibold text-[#111111] truncate">
+                  {productName}
+                </h3>
+                <p className="text-sm text-[#8d9890]">
+                  {store} · {orderNumber}
+                </p>
               </div>
               <div className="flex items-center gap-2">
                 <StatusBadge status={status} />
@@ -92,7 +117,9 @@ export function OrderCard({
               </span>
               <span className="flex flex-col gap-1">
                 <span className="text-[#8d9890]">Tracking</span>
-                <code className="font-mono text-[#8d9890] bg-[#f7f8f6] px-2 py-1 rounded">{trackingNumber}</code>
+                <code className="font-mono text-[#8d9890] bg-[#f7f8f6] px-2 py-1 rounded">
+                  {trackingNumber}
+                </code>
               </span>
               <span className="flex flex-col gap-1">
                 <span className="text-[#8d9890]">Price</span>
@@ -100,12 +127,26 @@ export function OrderCard({
               </span>
               <span className="flex flex-col gap-1">
                 <span className="text-[#8d9890]">ETA</span>
-                <span className={clsx("font-medium", status === "delayed" && "text-red-600", "text-[#111111]")}>{eta}</span>
+                <span
+                  className={clsx(
+                    "font-medium",
+                    status === "delayed" && "text-red-600",
+                    "text-[#111111]",
+                  )}
+                >
+                  {eta}
+                </span>
               </span>
             </div>
 
             <div className="mt-4">
-              <Progress value={progress} showLabel label="Delivery progress" variant="success" size="md" />
+              <Progress
+                value={progress}
+                showLabel
+                label="Delivery progress"
+                variant="success"
+                size="md"
+              />
               <div className="mt-2 flex items-center justify-between text-sm text-[#8d9890]">
                 <span>{lastUpdate}</span>
                 {status === "delayed" && (
@@ -119,10 +160,18 @@ export function OrderCard({
           </div>
 
           <div className="flex gap-2 sm:flex-col sm:items-end">
-            <Link href={`/orders/${id}`} className="p-2 rounded-xl text-[#8d9890] hover:bg-[#f7f8f6] hover:text-green-700 transition-colors" aria-label="Open order details">
+            <Link
+              href={`/orders/${id}`}
+              className="p-2 rounded-xl text-[#8d9890] hover:bg-[#f7f8f6] hover:text-green-700 transition-colors"
+              aria-label="Open order details"
+            >
               <ExternalLink className="h-5 w-5" />
             </Link>
-            <Button variant="ghost" size="icon" aria-label="Copy tracking number">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Copy tracking number"
+            >
               <Copy className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon" aria-label="Refresh tracking">

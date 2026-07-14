@@ -6,6 +6,7 @@ import {
   Search,
   Mail,
   Bell,
+  Menu,
   ChevronDown,
   Settings,
   LogOut,
@@ -24,9 +25,27 @@ interface Notification {
 }
 
 const notifications: Notification[] = [
-  { id: 1, title: "AirPods Pro arriving today", time: "2 hrs ago", type: "out_for_delivery", read: false },
-  { id: 2, title: "Nike Pegasus departed Gurugram hub", time: "4 hrs ago", type: "in_transit", read: false },
-  { id: 3, title: "Flipkart shipment is delayed", time: "1 day ago", type: "delayed", read: true },
+  {
+    id: 1,
+    title: "AirPods Pro arriving today",
+    time: "2 hrs ago",
+    type: "out_for_delivery",
+    read: false,
+  },
+  {
+    id: 2,
+    title: "Nike Pegasus departed Gurugram hub",
+    time: "4 hrs ago",
+    type: "in_transit",
+    read: false,
+  },
+  {
+    id: 3,
+    title: "Flipkart shipment is delayed",
+    time: "1 day ago",
+    type: "delayed",
+    read: true,
+  },
 ];
 
 const unreadCount = notifications.filter((n) => !n.read).length;
@@ -39,10 +58,16 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (notificationsRef.current && !notificationsRef.current.contains(event.target as Node)) {
+      if (
+        notificationsRef.current &&
+        !notificationsRef.current.contains(event.target as Node)
+      ) {
         setNotificationsOpen(false);
       }
-      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+      if (
+        userMenuRef.current &&
+        !userMenuRef.current.contains(event.target as Node)
+      ) {
         setUserMenuOpen(false);
       }
     }
@@ -63,24 +88,32 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
             onClick={onMenuClick}
             aria-label="Open menu"
           >
-            <Mail className="h-6 w-6" />
+            <Menu className="h-6 w-6" />
           </button>
         </div>
         <div className="flex-1 min-w-0">
           <div className="relative w-full max-w-xs sm:max-w-md">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8d9890]" aria-hidden="true" />
+            <Search
+              className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8d9890]"
+              aria-hidden="true"
+            />
             <input
               type="search"
-              placeholder="Search orders, stores, tracking..."
-              className="w-full rounded-xl border border-[#edf0ec] bg-[#f7f8f6] pl-10 pr-10 py-2 text-sm text-[#111111] placeholder-[#8d9890] focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
+              placeholder="Search orders, stores, tracking"
+              className="w-full rounded-xl border border-[#edf0ec] bg-[#f7f8f6] pl-10 pr-14 py-2 text-sm text-[#111111] placeholder-[#8d9890] focus:outline-none focus:ring-2 focus:ring-green-500/30 focus:border-green-500"
               aria-label="Search orders"
             />
-            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:block text-[10px] font-mono text-[#8d9890] bg-[#edf0ec] px-1.5 py-0.5 rounded">⌘F</kbd>
+            <kbd className="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:block text-[10px] font-mono text-[#8d9890] bg-[#edf0ec] px-1.5 py-0.5 rounded">
+              ⌘ F
+            </kbd>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="relative p-2 rounded-xl text-[#8d9890] hover:bg-[#f7f8f6] hover:text-green-700" aria-label="Gmail">
+          <button
+            className="relative p-2 rounded-xl text-[#8d9890] hover:bg-[#f7f8f6] hover:text-green-700"
+            aria-label="Gmail"
+          >
             <Mail className="h-5 w-5" />
           </button>
 
@@ -102,8 +135,13 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
             {notificationsOpen && (
               <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-[#edf0ec] bg-white shadow-lg overflow-hidden">
                 <div className="flex items-center justify-between border-b border-[#edf0ec] px-4 py-3">
-                  <h2 className="font-semibold text-[#111111]">Notifications</h2>
-                  <button onClick={markAllRead} className="text-xs font-medium text-green-700 hover:text-green-800">
+                  <h2 className="font-semibold text-[#111111]">
+                    Notifications
+                  </h2>
+                  <button
+                    onClick={markAllRead}
+                    className="text-xs font-medium text-green-700 hover:text-green-800"
+                  >
                     Mark all read
                   </button>
                 </div>
@@ -113,19 +151,40 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
                       key={n.id}
                       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#f7f8f6] text-left transition-colors"
                     >
-                      <div className={clsx("flex h-10 w-10 items-center justify-center rounded-xl shrink-0", n.type === "out_for_delivery" && "bg-green-50", n.type === "in_transit" && "bg-blue-50", n.type === "delayed" && "bg-red-50")}>
-                        {n.type === "out_for_delivery" && <Mail className="h-5 w-5 text-green-700" />}
-                        {n.type === "in_transit" && <Mail className="h-5 w-5 text-blue-600" />}
-                        {n.type === "delayed" && <Bell className="h-5 w-5 text-red-600" />}
+                      <div
+                        className={clsx(
+                          "flex h-10 w-10 items-center justify-center rounded-xl shrink-0",
+                          n.type === "out_for_delivery" && "bg-green-50",
+                          n.type === "in_transit" && "bg-blue-50",
+                          n.type === "delayed" && "bg-red-50",
+                        )}
+                      >
+                        {n.type === "out_for_delivery" && (
+                          <Mail className="h-5 w-5 text-green-700" />
+                        )}
+                        {n.type === "in_transit" && (
+                          <Mail className="h-5 w-5 text-blue-600" />
+                        )}
+                        {n.type === "delayed" && (
+                          <Bell className="h-5 w-5 text-red-600" />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className={clsx("text-sm font-medium text-[#111111] truncate", !n.read && "font-semibold")}>
+                        <p
+                          className={clsx(
+                            "text-sm font-medium text-[#111111] truncate",
+                            !n.read && "font-semibold",
+                          )}
+                        >
                           {n.title}
                         </p>
                         <p className="text-xs text-[#8d9890]">{n.time}</p>
                       </div>
                       {!n.read && (
-                        <div className="h-2 w-2 rounded-full bg-green-600" aria-label="Unread" />
+                        <div
+                          className="h-2 w-2 rounded-full bg-green-600"
+                          aria-label="Unread"
+                        />
                       )}
                     </button>
                   ))}
@@ -160,7 +219,9 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
                   <div className="flex items-center gap-3">
                     <Avatar size="md" fallback="U" alt="User" />
                     <div>
-                      <p className="text-sm font-medium text-[#111111]">User Name</p>
+                      <p className="text-sm font-medium text-[#111111]">
+                        User Name
+                      </p>
                       <p className="text-xs text-[#8d9890]">user@example.com</p>
                     </div>
                   </div>

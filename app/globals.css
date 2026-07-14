@@ -12,8 +12,8 @@
 
 body {
   margin: 0;
-  background: #f7f6f9;
-  color: #25212a;
+  background: #f1f2f1;
+  color: #111111;
 }
 
 a {
@@ -29,7 +29,7 @@ textarea {
 }
 
 ::selection {
-  background: rgba(99, 91, 255, 0.18);
+  background: rgba(15, 107, 66, 0.18);
 }
 
 .focus-ring {

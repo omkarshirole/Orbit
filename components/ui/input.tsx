@@ -12,13 +12,19 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, helperText, leftIcon, rightIcon, id, ...props }, ref) => {
+  (
+    { className, label, error, helperText, leftIcon, rightIcon, id, ...props },
+    ref,
+  ) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, "-");
 
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="block text-sm font-medium text-[#1f2420] mb-1.5">
+          <label
+            htmlFor={inputId}
+            className="block text-sm font-medium text-[#1f2420] mb-1.5"
+          >
             {label}
           </label>
         )}
@@ -41,10 +47,16 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               error
                 ? "border-red-300 focus:border-red-500 focus:ring-red-500/30"
                 : "border-[#edf0ec] hover:border-green-200",
-              className
+              className,
             )}
             aria-invalid={error ? "true" : "false"}
-            aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
+            aria-describedby={
+              error
+                ? `${inputId}-error`
+                : helperText
+                  ? `${inputId}-helper`
+                  : undefined
+            }
             {...props}
           />
           {rightIcon && (
@@ -54,7 +66,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           )}
         </div>
         {error && (
-          <p id={`${inputId}-error`} className="mt-1.5 text-sm text-red-600" role="alert">
+          <p
+            id={`${inputId}-error`}
+            className="mt-1.5 text-sm text-red-600"
+            role="alert"
+          >
             {error}
           </p>
         )}
@@ -65,7 +81,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Input.displayName = "Input";
@@ -83,7 +99,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={inputId} className="block text-sm font-medium text-[#1f2420] mb-1.5">
+          <label
+            htmlFor={inputId}
+            className="block text-sm font-medium text-[#1f2420] mb-1.5"
+          >
             {label}
           </label>
         )}
@@ -98,14 +117,24 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             error
               ? "border-red-300 focus:border-red-500 focus:ring-red-500/30"
               : "border-[#edf0ec] hover:border-green-200",
-            className
+            className,
           )}
           aria-invalid={error ? "true" : "false"}
-          aria-describedby={error ? `${inputId}-error` : helperText ? `${inputId}-helper` : undefined}
+          aria-describedby={
+            error
+              ? `${inputId}-error`
+              : helperText
+                ? `${inputId}-helper`
+                : undefined
+          }
           {...props}
         />
         {error && (
-          <p id={`${inputId}-error`} className="mt-1.5 text-sm text-red-600" role="alert">
+          <p
+            id={`${inputId}-error`}
+            className="mt-1.5 text-sm text-red-600"
+            role="alert"
+          >
             {error}
           </p>
         )}
@@ -116,7 +145,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
         )}
       </div>
     );
-  }
+  },
 );
 
 Textarea.displayName = "Textarea";

@@ -1,8 +1,23 @@
 "use client";
 
 import { clsx } from "clsx";
-import { Plus, Truck, Package, Clock, AlertTriangle, CheckCircle2, RotateCcw, ExternalLink } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "./ui/card";
+import {
+  Plus,
+  Truck,
+  Package,
+  Clock,
+  AlertTriangle,
+  CheckCircle2,
+  RotateCcw,
+  ExternalLink,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardFooter,
+} from "./ui/card";
 import { StatusBadge } from "./ui/status-badge";
 import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
@@ -75,7 +90,10 @@ const orders = [
   },
 ];
 
-const statusIcons: Record<string, React.ComponentType<{ className?: string }>> = {
+const statusIcons: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   out_for_delivery: Truck,
   in_transit: Truck,
   delayed: AlertTriangle,
@@ -102,24 +120,34 @@ export function RecentOrders() {
                 key={order.id}
                 className={clsx(
                   "flex items-center gap-3 p-3 rounded-xl border transition-colors",
-                  order.status === "delayed" ? "border-red-200 bg-red-50" : "border-[#edf0ec] hover:bg-[#f7f8f6]"
+                  order.status === "delayed"
+                    ? "border-red-200 bg-red-50"
+                    : "border-[#edf0ec] hover:bg-[#f7f8f6]",
                 )}
               >
                 <div
                   className={clsx(
                     "flex h-10 w-10 items-center justify-center rounded-lg shrink-0",
-                    order.status === "out_for_delivery" && "bg-amber-100 text-amber-600",
-                    order.status === "in_transit" && "bg-green-100 text-green-600",
+                    order.status === "out_for_delivery" &&
+                      "bg-amber-100 text-amber-600",
+                    order.status === "in_transit" &&
+                      "bg-green-100 text-green-600",
                     order.status === "delayed" && "bg-red-100 text-red-600",
-                    order.status === "delivered" && "bg-green-100 text-green-600",
-                    order.status === "shipped" && "bg-blue-100 text-blue-600"
+                    order.status === "delivered" &&
+                      "bg-green-100 text-green-600",
+                    order.status === "shipped" && "bg-blue-100 text-blue-600",
                   )}
                 >
                   <Icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-[#111111] truncate">{order.product}</p>
-                  <p className="text-sm text-[#8d9890]">{order.store} · {order.courier} · {order.status.replace("_", " ")}</p>
+                  <p className="font-medium text-[#111111] truncate">
+                    {order.product}
+                  </p>
+                  <p className="text-sm text-[#8d9890]">
+                    {order.store} · {order.courier} ·{" "}
+                    {order.status.replace("_", " ")}
+                  </p>
                 </div>
                 <StatusBadge status={order.status} />
               </div>
@@ -127,11 +155,16 @@ export function RecentOrders() {
           })}
         </div>
         <div className="mt-4 pt-4 border-t border-[#edf0ec]">
-          <p className="text-sm text-[#8d9890] text-center">Showing 5 of 8 orders</p>
+          <p className="text-sm text-[#8d9890] text-center">
+            Showing 5 of 8 orders
+          </p>
         </div>
       </CardContent>
       <CardFooter className="pt-0">
-        <Button variant="ghost" className="w-full text-green-700 hover:bg-green-50">
+        <Button
+          variant="ghost"
+          className="w-full text-green-700 hover:bg-green-50"
+        >
           View all orders
         </Button>
       </CardFooter>

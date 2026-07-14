@@ -26,22 +26,42 @@ const variantColors = {
   info: "bg-blue-500",
 };
 
-export function Progress({ className, value, max = 100, size = "md", showLabel, label, variant = "default", ...props }: ProgressProps) {
+export function Progress({
+  className,
+  value,
+  max = 100,
+  size = "md",
+  showLabel,
+  label,
+  variant = "default",
+  ...props
+}: ProgressProps) {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
 
   return (
     <div className={clsx("w-full", className)} {...props}>
       {(showLabel || label) && (
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-sm font-medium text-[#1f2420]">{label || `${Math.round(percentage)}%`}</span>
-          {showLabel && <span className="text-xs text-[#8d9890]">{Math.round(percentage)}%</span>}
+          <span className="text-sm font-medium text-[#1f2420]">
+            {label || `${Math.round(percentage)}%`}
+          </span>
+          {showLabel && (
+            <span className="text-xs text-[#8d9890]">
+              {Math.round(percentage)}%
+            </span>
+          )}
         </div>
       )}
-      <div className={clsx("w-full rounded-full bg-[#edf0ec] overflow-hidden", sizes[size])}>
+      <div
+        className={clsx(
+          "w-full rounded-full bg-[#edf0ec] overflow-hidden",
+          sizes[size],
+        )}
+      >
         <div
           className={clsx(
             "h-full rounded-full transition-all duration-300 ease-out",
-            variantColors[variant]
+            variantColors[variant],
           )}
           style={{ width: `${percentage}%` }}
           role="progressbar"
@@ -89,7 +109,13 @@ export function CircularProgress({
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className={clsx("relative inline-flex items-center justify-center", className)} {...props}>
+    <div
+      className={clsx(
+        "relative inline-flex items-center justify-center",
+        className,
+      )}
+      {...props}
+    >
       <svg width={size} height={size} className="transform -rotate-90">
         <circle
           className="stroke-[#edf0ec]"
@@ -102,7 +128,7 @@ export function CircularProgress({
         <circle
           className={clsx(
             "stroke-linecap-round transition-all duration-500 ease-out",
-            variantStrokeColors[variant]
+            variantStrokeColors[variant],
           )}
           strokeWidth={strokeWidth}
           fill="none"
@@ -116,7 +142,9 @@ export function CircularProgress({
       </svg>
       <div className="absolute inset-0 flex items-center justify-center">
         {showValue && (
-          <span className="text-2xl font-bold text-[#111111]">{Math.round(percentage)}%</span>
+          <span className="text-2xl font-bold text-[#111111]">
+            {Math.round(percentage)}%
+          </span>
         )}
         {!showValue && children}
       </div>

@@ -55,7 +55,13 @@ const groups: NavGroup[] = [
   { label: "GENERAL", items: GENERAL_ITEMS },
 ];
 
-export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export function Sidebar({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) {
   const pathname = usePathname();
 
   return (
@@ -71,7 +77,7 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
       <aside
         className={clsx(
           "fixed inset-y-0 left-0 z-50 w-64 transform bg-white border-r border-[#edf0ec] transition-transform duration-200 ease-out lg:relative lg:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          isOpen ? "translate-x-0" : "-translate-x-full",
         )}
       >
         <div className="flex h-full flex-col">
@@ -95,7 +101,9 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                 </p>
                 <ul className="space-y-1" role="list">
                   {group.items.map((item) => {
-                    const isActive = pathname === item.href || pathname.startsWith(item.href + "#");
+                    const isActive =
+                      pathname === item.href ||
+                      pathname.startsWith(item.href + "#");
                     const Icon = item.icon;
                     return (
                       <li key={item.label}>
@@ -106,13 +114,20 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
                             "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-150",
                             isActive
                               ? "bg-green-50 text-green-800"
-                              : "text-[#8d9890] hover:bg-[#f7f8f6] hover:text-[#111111]"
+                              : "text-[#8d9890] hover:bg-[#f7f8f6] hover:text-[#111111]",
                           )}
                           aria-current={isActive ? "page" : undefined}
                         >
-                          <Icon className={clsx("h-5 w-5 shrink-0", isActive && "text-green-700")} />
+                          <Icon
+                            className={clsx(
+                              "h-5 w-5 shrink-0",
+                              isActive && "text-green-700",
+                            )}
+                          />
                           {item.label}
-                          {isActive && <ChevronRight className="ml-auto h-4 w-4 text-green-600" />}
+                          {isActive && (
+                            <ChevronRight className="ml-auto h-4 w-4 text-green-600" />
+                          )}
                         </Link>
                       </li>
                     );
@@ -130,7 +145,9 @@ export function Sidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => v
               </div>
               <div className="relative">
                 <p className="font-semibold">Private by design</p>
-                <p className="mt-1 text-sm text-green-100">Gmail read-only. No email edits.</p>
+                <p className="mt-1 text-sm text-green-100">
+                  Gmail read-only. No email edits.
+                </p>
                 <button className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 text-xs font-medium hover:bg-white/20 transition-colors">
                   Manage access
                   <ChevronRight className="h-3 w-3" />

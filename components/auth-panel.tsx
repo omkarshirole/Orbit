@@ -30,15 +30,15 @@ export function AuthPanel() {
             and delivery updates from one quiet dashboard.
           </p>
         </section>
-        <section className="rounded-lg border border-orbit-line bg-white p-6 shadow-soft">
+        <section className="rounded-2xl border border-orbit-line bg-white p-6 shadow-soft">
           <h2 className="text-2xl font-semibold">Sign in to Orbit</h2>
-          <p className="mt-3 rounded-md border border-indigo-100 bg-indigo-50 p-4 text-sm leading-6 text-orbit-muted">
+          <p className="mt-3 rounded-xl border border-orbit-line bg-orbit-wash p-4 text-sm leading-6 text-orbit-muted">
             Sign-in only verifies your identity. Gmail read access is requested
             separately and is used only to identify order-related emails.
           </p>
           <button
             onClick={signIn}
-            className="focus-ring mt-6 inline-flex w-full items-center justify-center gap-2 rounded-md bg-orbit-primary px-4 py-3 font-semibold text-white transition hover:bg-orbit-primaryDark"
+            className="focus-ring mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-orbit-primary px-4 py-3 font-semibold text-white transition hover:bg-orbit-primaryDark"
           >
             <LogIn size={18} />
             Continue with Google
