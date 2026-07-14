@@ -1,7 +1,7 @@
 # Orbit
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Orbit_Order_Hub-v0.1.0-635bff?style=for-the-badge&logo=rocket&logoColor=white" alt="Orbit Order Hub">
+  <img src="https://img.shields.io/badge/Orbit-v0.1.0-635bff?style=for-the-badge&logo=rocket&logoColor=white" alt="Orbit">
 </p>
 
 <p align="center">
