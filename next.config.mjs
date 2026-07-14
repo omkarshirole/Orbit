@@ -1,12 +1,14 @@
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const projectRoot = dirname(fileURLToPath(import.meta.url));
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  outputFileTracingRoot: process.cwd(),
-<<<<<<< HEAD
-=======
+  outputFileTracingRoot: projectRoot,
   turbopack: {
-    root: process.cwd(),
+    root: projectRoot,
   },
->>>>>>> 2870ac1 (Initial commit)
   experimental: {
     serverActions: {
       allowedOrigins: [],

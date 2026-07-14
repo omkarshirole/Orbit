@@ -34,21 +34,6 @@ interface NavGroup {
 
 const MENU_ITEMS: NavItem[] = [
   { label: "Overview", icon: Package, href: "/dashboard" },
-<<<<<<< HEAD
-  { label: "All Orders", icon: Inbox, href: "/dashboard#all" },
-  { label: "Active", icon: Clock, href: "/dashboard#active" },
-  { label: "In Transit", icon: Truck, href: "/dashboard#transit" },
-  { label: "Delivered", icon: CheckCircle2, href: "/dashboard#delivered" },
-  { label: "Delayed", icon: Bell, href: "/dashboard#delayed" },
-  { label: "Returns & Refunds", icon: Undo2, href: "/dashboard#returns" },
-  { label: "Gmail Sync", icon: Mail, href: "/dashboard#gmail" },
-];
-
-const GENERAL_ITEMS: NavItem[] = [
-  { label: "Connections", icon: Link2, href: "/dashboard#connections" },
-  { label: "Settings", icon: Settings, href: "/dashboard#settings" },
-  { label: "Help", icon: HelpCircle, href: "/dashboard#help" },
-=======
   { label: "All Orders", icon: Inbox, href: "/orders" },
   { label: "Active", icon: Clock, href: "/orders/active" },
   { label: "In Transit", icon: Truck, href: "/orders/in-transit" },
@@ -62,7 +47,6 @@ const GENERAL_ITEMS: NavItem[] = [
   { label: "Connections", icon: Link2, href: "/connections" },
   { label: "Settings", icon: Settings, href: "/settings" },
   { label: "Help", icon: HelpCircle, href: "/help" },
->>>>>>> 2870ac1 (Initial commit)
   { label: "Logout", icon: LogOut, href: "/auth" },
 ];
 
@@ -119,12 +103,8 @@ export function Sidebar({
                   {group.items.map((item) => {
                     const isActive =
                       pathname === item.href ||
-<<<<<<< HEAD
-                      pathname.startsWith(item.href + "#");
-=======
                       (item.href !== "/dashboard" &&
                         pathname.startsWith(item.href + "/"));
->>>>>>> 2870ac1 (Initial commit)
                     const Icon = item.icon;
                     return (
                       <li key={item.label}>

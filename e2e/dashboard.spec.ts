@@ -24,9 +24,6 @@ test("order details renders on mobile", async ({ page }) => {
   await expect(
     page.getByRole("heading", { name: "AirPods Pro USB-C" }),
   ).toBeVisible();
-<<<<<<< HEAD
-  await expect(page.getByText("Shipment timeline")).toBeVisible();
-=======
   await expect(page.getByText("Shipment Timeline")).toBeVisible();
 });
 
@@ -50,5 +47,4 @@ test("all sidebar pages render", async ({ page }) => {
       page.getByRole("heading", { name: heading, level: 1 }),
     ).toBeVisible();
   }
->>>>>>> 2870ac1 (Initial commit)
 });
