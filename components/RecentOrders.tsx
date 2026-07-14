@@ -1,25 +1,17 @@
 "use client";
 
 import { clsx } from "clsx";
+import Link from "next/link";
 import {
-  Plus,
-  Truck,
-  Package,
-  Clock,
   AlertTriangle,
   CheckCircle2,
-  RotateCcw,
   ExternalLink,
+  Package,
+  Plus,
+  Truck,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-} from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { StatusBadge } from "./ui/status-badge";
-import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
 
 const orders = [
@@ -27,73 +19,45 @@ const orders = [
     id: "ord_apple",
     product: "AirPods Pro USB-C",
     store: "Apple",
-    orderNumber: "APL-928312",
     status: "out_for_delivery" as const,
     courier: "Blue Dart",
-    tracking: "BD892034781IN",
-    price: "INR 24,900",
     eta: "Today",
-    progress: 82,
-    lastUpdate: "Reached local facility — 2 hrs ago",
   },
   {
     id: "ord_nike",
     product: "Nike Pegasus 41",
     store: "Nike",
-    orderNumber: "NKE-55129",
     status: "in_transit" as const,
     courier: "Delhivery",
-    tracking: "142536475869",
-    price: "INR 11,895",
     eta: "Jul 17",
-    progress: 56,
-    lastUpdate: "Departed Gurugram hub — 4 hrs ago",
   },
   {
     id: "ord_flipkart",
     product: "Samsung T7 Shield SSD",
     store: "Flipkart",
-    orderNumber: "OD431922",
     status: "delayed" as const,
     courier: "Ekart",
-    tracking: "FMPC2938123890",
-    price: "INR 8,499",
     eta: "Delayed",
-    progress: 42,
-    lastUpdate: "Delay at sorting center — 1 day ago",
   },
   {
     id: "ord_amazon",
     product: "Kindle Paperwhite",
     store: "Amazon",
-    orderNumber: "AMZ-402819",
     status: "delivered" as const,
     courier: "Amazon Logistics",
-    tracking: "TBA9876543210",
-    price: "INR 12,999",
     eta: "Delivered Jul 12",
-    progress: 100,
-    lastUpdate: "Delivered to doorstep — 2 days ago",
   },
   {
     id: "ord_myntra",
     product: "Levi's 511 Jeans",
     store: "Myntra",
-    orderNumber: "MYN-77321",
     status: "shipped" as const,
     courier: "Delhivery",
-    tracking: "DHL1234567890",
-    price: "INR 2,499",
     eta: "Jul 15",
-    progress: 35,
-    lastUpdate: "Picked up from warehouse — 6 hrs ago",
   },
 ];
 
-const statusIcons: Record<
-  string,
-  React.ComponentType<{ className?: string }>
-> = {
+const statusIcons = {
   out_for_delivery: Truck,
   in_transit: Truck,
   delayed: AlertTriangle,
@@ -103,71 +67,61 @@ const statusIcons: Record<
 
 export function RecentOrders() {
   return (
-    <Card className="h-full">
-      <CardHeader className="pb-2 flex items-center justify-between">
+    <Card>
+      <CardHeader className="flex items-center justify-between pb-2">
         <CardTitle>Recent Orders</CardTitle>
-        <Button variant="outline" size="sm">
-          <Plus className="h-3.5 w-3.5 mr-1" />
+        <Button variant="outline" size="sm" className="border-[#0f6b42]/30">
+          <Plus className="mr-1 h-3.5 w-3.5" />
           New
         </Button>
       </CardHeader>
       <CardContent className="pt-0">
-        <div className="space-y-3">
+        <div className="grid gap-3 md:grid-cols-2">
           {orders.map((order) => {
             const Icon = statusIcons[order.status] || Package;
             return (
-              <div
+              <Link
                 key={order.id}
+                href={`/orders/${order.id}`}
                 className={clsx(
-                  "flex items-center gap-3 p-3 rounded-xl border transition-colors",
+                  "group flex items-center gap-3 rounded-[20px] border p-3 transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(19,33,24,0.08)]",
                   order.status === "delayed"
-                    ? "border-red-200 bg-red-50"
-                    : "border-[#edf0ec] hover:bg-[#f7f8f6]",
+                    ? "border-red-100 bg-red-50"
+                    : "border-[#edf0ec] bg-white hover:bg-[#fbfcfa]",
                 )}
               >
                 <div
                   className={clsx(
-                    "flex h-10 w-10 items-center justify-center rounded-lg shrink-0",
+                    "flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl",
                     order.status === "out_for_delivery" &&
                       "bg-amber-100 text-amber-600",
                     order.status === "in_transit" &&
-                      "bg-green-100 text-green-600",
+                      "bg-green-100 text-green-700",
                     order.status === "delayed" && "bg-red-100 text-red-600",
                     order.status === "delivered" &&
-                      "bg-green-100 text-green-600",
+                      "bg-green-100 text-green-700",
                     order.status === "shipped" && "bg-blue-100 text-blue-600",
                   )}
                 >
                   <Icon className="h-5 w-5" />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-[#111111] truncate">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-semibold text-[#111111]">
                     {order.product}
                   </p>
-                  <p className="text-sm text-[#8d9890]">
-                    {order.store} · {order.courier} ·{" "}
-                    {order.status.replace("_", " ")}
+                  <p className="truncate text-sm text-[#8d9890]">
+                    {order.store} · {order.courier} · {order.eta}
                   </p>
                 </div>
-                <StatusBadge status={order.status} />
-              </div>
+                <div className="hidden shrink-0 items-center gap-2 sm:flex">
+                  <StatusBadge status={order.status} />
+                  <ExternalLink className="h-4 w-4 text-[#9aa49d] transition group-hover:text-[#0f6b42]" />
+                </div>
+              </Link>
             );
           })}
         </div>
-        <div className="mt-4 pt-4 border-t border-[#edf0ec]">
-          <p className="text-sm text-[#8d9890] text-center">
-            Showing 5 of 8 orders
-          </p>
-        </div>
       </CardContent>
-      <CardFooter className="pt-0">
-        <Button
-          variant="ghost"
-          className="w-full text-green-700 hover:bg-green-50"
-        >
-          View all orders
-        </Button>
-      </CardFooter>
     </Card>
   );
 }

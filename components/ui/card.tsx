@@ -9,8 +9,10 @@ export interface CardProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 const variants = {
-  default: "bg-white border border-[#edf0ec] shadow-sm",
-  elevated: "bg-white border border-[#edf0ec] shadow-lg",
+  default:
+    "bg-white border border-white shadow-[0_12px_34px_rgba(19,33,24,0.055)]",
+  elevated:
+    "bg-white border border-white shadow-[0_18px_48px_rgba(19,33,24,0.09)]",
   outlined: "bg-white border-2 border-[#edf0ec]",
   soft: "bg-[#f7f8f6] border border-transparent",
 };
@@ -18,8 +20,8 @@ const variants = {
 const paddings = {
   none: "",
   sm: "p-4",
-  md: "p-6",
-  lg: "p-8",
+  md: "p-4 md:p-6",
+  lg: "p-5 md:p-8",
 };
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -31,7 +33,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={clsx(
-          "rounded-2xl transition-shadow duration-200",
+          "rounded-[24px] transition-shadow duration-200",
           variants[variant],
           paddings[padding],
           className,
@@ -66,7 +68,10 @@ export const CardTitle = forwardRef<
   return (
     <h3
       ref={ref}
-      className={clsx("text-lg font-semibold text-[#111111]", className)}
+      className={clsx(
+        "text-base font-semibold tracking-[-0.01em] text-[#111111]",
+        className,
+      )}
       {...props}
     >
       {children}

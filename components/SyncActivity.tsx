@@ -1,16 +1,14 @@
 "use client";
 
-import { clsx } from "clsx";
 import {
-  Mail,
+  AlertCircle,
   CheckCircle2,
   Clock,
-  AlertCircle,
-  Truck,
+  Mail,
   RotateCcw,
 } from "lucide-react";
+import { clsx } from "clsx";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { StatusBadge } from "./ui/status-badge";
 import { Button } from "./ui/button";
 
 const syncItems = [
@@ -19,85 +17,76 @@ const syncItems = [
     label: "Gmail scan completed",
     status: "completed" as const,
     details: "24 emails scanned",
+    icon: Mail,
   },
   {
     id: 2,
     label: "Orders added",
     status: "completed" as const,
     details: "3 orders added",
+    icon: CheckCircle2,
   },
   {
     id: 3,
-    label: "Orders updated",
-    status: "completed" as const,
-    details: "2 orders updated",
+    label: "AfterShip registration",
+    status: "pending" as const,
+    details: "2 pending tracking numbers",
+    icon: AlertCircle,
   },
   {
     id: 4,
-    label: "AfterShip registration",
-    status: "pending" as const,
-    details: "Pending webhook",
-  },
-  {
-    id: 5,
-    label: "Sync in progress",
+    label: "Next scheduled sync",
     status: "in_progress" as const,
-    details: "Scanning...",
+    details: "Runs in 28 minutes",
+    icon: Clock,
   },
 ];
 
 const statusConfig = {
-  completed: { icon: CheckCircle2, color: "text-green-600", bg: "bg-green-50" },
-  in_progress: { icon: Clock, color: "text-blue-600", bg: "bg-blue-50" },
-  pending: { icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-50" },
+  completed: { color: "text-[#168252]", bg: "bg-green-50", badge: "Completed" },
+  in_progress: { color: "text-blue-600", bg: "bg-blue-50", badge: "Queued" },
+  pending: { color: "text-amber-600", bg: "bg-amber-50", badge: "Pending" },
 };
 
 export function SyncActivity() {
   return (
     <Card className="h-full">
-      <CardHeader className="pb-2 flex items-center justify-between">
+      <CardHeader className="flex items-center justify-between pb-2">
         <CardTitle>Sync Activity</CardTitle>
-        <Button variant="outline" size="sm">
-          Sync Now
+        <Button variant="outline" size="sm" className="border-[#0f6b42]/30">
+          <RotateCcw className="mr-1 h-3.5 w-3.5" />
+          Sync
         </Button>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-3">
-          {syncItems.map((item) => {
-            const config = statusConfig[item.status];
-            const Icon = config.icon;
-            return (
+      <CardContent className="space-y-3 pt-0">
+        {syncItems.map((item) => {
+          const config = statusConfig[item.status];
+          const Icon = item.icon;
+          return (
+            <div
+              key={item.id}
+              className="flex items-center gap-3 rounded-2xl border border-[#edf0ec] bg-white p-3 transition-colors hover:bg-[#f7f8f6]"
+            >
               <div
-                key={item.id}
-                className="flex items-center gap-3 p-3 rounded-xl border border-[#edf0ec] hover:bg-[#f7f8f6] transition-colors"
+                className={clsx(
+                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl",
+                  config.bg,
+                )}
               >
-                <div
-                  className={clsx(
-                    "flex h-10 w-10 items-center justify-center rounded-lg shrink-0",
-                    config.bg,
-                  )}
-                >
-                  <Icon className={clsx("h-5 w-5", config.color)} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium text-[#111111] truncate">
-                    {item.label}
-                  </p>
-                  <p className="text-sm text-[#8d9890]">{item.details}</p>
-                </div>
-                <StatusBadge
-                  status={
-                    item.status === "completed"
-                      ? "delivered"
-                      : item.status === "in_progress"
-                        ? "in_transit"
-                        : "arriving_soon"
-                  }
-                />
+                <Icon className={clsx("h-5 w-5", config.color)} />
               </div>
-            );
-          })}
-        </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-semibold text-[#111111]">
+                  {item.label}
+                </p>
+                <p className="text-sm text-[#8d9890]">{item.details}</p>
+              </div>
+              <span className="hidden rounded-full bg-[#f7f8f6] px-2.5 py-1 text-[11px] font-semibold text-[#78837b] sm:inline-flex">
+                {config.badge}
+              </span>
+            </div>
+          );
+        })}
       </CardContent>
     </Card>
   );
