@@ -24,6 +24,11 @@ import { Button } from "./ui/button";
 export function DashboardAppClient() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showAddOrder, setShowAddOrder] = useState(false);
+<<<<<<< HEAD
+=======
+  const [syncStatus, setSyncStatus] = useState<string | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+>>>>>>> 2870ac1 (Initial commit)
 
   const stats = [
     {
@@ -60,6 +65,32 @@ export function DashboardAppClient() {
     },
   ];
 
+<<<<<<< HEAD
+=======
+  async function syncGmail() {
+    setIsSyncing(true);
+    setSyncStatus(null);
+    try {
+      const response = await fetch("/api/gmail/sync", { method: "POST" });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(
+          result.error || "Sign in and connect Gmail before syncing.",
+        );
+      }
+      setSyncStatus(
+        `Sync complete: ${result.ordersAdded || 0} added, ${result.ordersUpdated || 0} updated.`,
+      );
+    } catch (error) {
+      setSyncStatus(
+        error instanceof Error ? error.message : "Gmail sync could not start.",
+      );
+    } finally {
+      setIsSyncing(false);
+    }
+  }
+
+>>>>>>> 2870ac1 (Initial commit)
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,#ffffff_0,#f3f4f1_42%,#ebeeea_100%)] p-3 text-[#121713] sm:p-5 lg:p-7">
       <div className="mx-auto flex min-h-[calc(100vh-3.5rem)] max-w-[1440px] overflow-hidden rounded-[32px] border border-white/80 bg-white/70 p-3 shadow-[0_24px_80px_rgba(22,34,27,0.12)] backdrop-blur md:p-4">
@@ -87,10 +118,18 @@ export function DashboardAppClient() {
                   variant="outline"
                   size="md"
                   className="h-11 rounded-full border-[#0f6b42]/40 bg-white px-5 text-[#0b4f30] shadow-sm hover:bg-[#f2f8f4]"
+<<<<<<< HEAD
                   onClick={() => {}}
                 >
                   <SyncIcon className="mr-2 h-4 w-4" />
                   Sync Gmail
+=======
+                  onClick={syncGmail}
+                  isLoading={isSyncing}
+                >
+                  <SyncIcon className="mr-2 h-4 w-4" />
+                  {isSyncing ? "Syncing" : "Sync Gmail"}
+>>>>>>> 2870ac1 (Initial commit)
                 </Button>
                 <Button
                   variant="primary"
@@ -103,6 +142,14 @@ export function DashboardAppClient() {
                 </Button>
               </div>
             </section>
+<<<<<<< HEAD
+=======
+            {syncStatus && (
+              <div className="mb-5 rounded-[20px] border border-[#dfe8df] bg-white px-4 py-3 text-sm font-semibold text-[#0b4f30] shadow-sm">
+                {syncStatus}
+              </div>
+            )}
+>>>>>>> 2870ac1 (Initial commit)
 
             <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
               {stats.map((stat, index) => (

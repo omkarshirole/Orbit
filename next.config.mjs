@@ -1,6 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   outputFileTracingRoot: process.cwd(),
+<<<<<<< HEAD
+=======
+  turbopack: {
+    root: process.cwd(),
+  },
+>>>>>>> 2870ac1 (Initial commit)
   experimental: {
     serverActions: {
       allowedOrigins: [],
