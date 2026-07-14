@@ -498,7 +498,7 @@ MIT License – see [LICENSE](LICENSE) for details.
 </p>
 
 <p align="center">
-  <a href="https://github.com/your-username/orbit-order-hub/issues">Report Bug</a> •
-  <a href="https://github.com/your-username/orbit-order-hub/issues">Request Feature</a> •
-  <a href="https://github.com/your-username/orbit-order-hub/discussions">Discussions</a>
+  <a href="https://github.com/omkarshirole/orbit/issues">Report Bug</a> •
+  <a href="https://github.com/omkarshirole/orbit/issues">Request Feature</a> •
+  <a href="https://github.com/omkarshirole/orbit/discussions">Discussions</a>
 </p>
