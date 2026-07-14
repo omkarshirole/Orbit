@@ -2,17 +2,21 @@
 
 import { LogIn } from "lucide-react";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { useToast } from "./toast-provider";
 
 export function AuthPanel() {
+  const { notify } = useToast();
+
   async function signIn() {
     const supabase = createSupabaseBrowserClient();
-    await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
         redirectTo: `${window.location.origin}/api/auth/callback?next=/dashboard`,
         scopes: "openid email profile",
       },
     });
+    if (error) notify(error.message, "info");
   }
 
   return (
@@ -38,7 +42,7 @@ export function AuthPanel() {
           </p>
           <button
             onClick={signIn}
-            className="focus-ring mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-orbit-primary px-4 py-3 font-semibold text-white transition hover:bg-orbit-primaryDark"
+            className="focus-ring mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-orbit-primary px-4 py-3 font-semibold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-orbit-primaryDark active:translate-y-0"
           >
             <LogIn size={18} />
             Continue with Google

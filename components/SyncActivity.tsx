@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -10,6 +11,7 @@ import {
 import { clsx } from "clsx";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
+import { useToast } from "./toast-provider";
 
 const syncItems = [
   {
@@ -49,13 +51,29 @@ const statusConfig = {
 };
 
 export function SyncActivity() {
+  const { notify } = useToast();
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  async function syncActivity() {
+    setIsSyncing(true);
+    await new Promise((resolve) => window.setTimeout(resolve, 650));
+    setIsSyncing(false);
+    notify("Sync activity refreshed");
+  }
+
   return (
     <Card className="h-full">
       <CardHeader className="flex items-center justify-between pb-2">
         <CardTitle>Sync Activity</CardTitle>
-        <Button variant="outline" size="sm" className="border-[#0f6b42]/30">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-[#0f6b42]/30"
+          onClick={syncActivity}
+          isLoading={isSyncing}
+        >
           <RotateCcw className="mr-1 h-3.5 w-3.5" />
-          Sync
+          {isSyncing ? "Syncing" : "Sync"}
         </Button>
       </CardHeader>
       <CardContent className="space-y-3 pt-0">

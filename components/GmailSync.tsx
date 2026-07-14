@@ -1,9 +1,30 @@
 "use client";
 
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Mail, RotateCcw, PauseCircle, Shield } from "lucide-react";
+import { Mail, RotateCcw, PauseCircle, PlayCircle, Shield } from "lucide-react";
+import { useToast } from "./toast-provider";
 
 export function GmailSync() {
+  const { notify } = useToast();
+  const [isPaused, setIsPaused] = useState(false);
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  async function syncNow() {
+    setIsSyncing(true);
+    await new Promise((resolve) => window.setTimeout(resolve, 650));
+    setIsSyncing(false);
+    notify("Gmail sync started");
+  }
+
+  function togglePause() {
+    setIsPaused((current) => {
+      const next = !current;
+      notify(next ? "Gmail auto-sync paused" : "Gmail auto-sync resumed");
+      return next;
+    });
+  }
+
   return (
     <Card
       variant="elevated"
@@ -36,13 +57,28 @@ export function GmailSync() {
         </div>
 
         <div className="flex w-full max-w-xs items-center gap-3">
-          <button className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white transition hover:bg-white/20">
-            <PauseCircle className="h-4 w-4" />
-            Pause
+          <button
+            type="button"
+            onClick={togglePause}
+            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-white/20 active:translate-y-0"
+          >
+            {isPaused ? (
+              <PlayCircle className="h-4 w-4" />
+            ) : (
+              <PauseCircle className="h-4 w-4" />
+            )}
+            {isPaused ? "Resume" : "Pause"}
           </button>
-          <button className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-[#064123] transition hover:bg-green-100">
-            <RotateCcw className="h-4 w-4" />
-            Sync Now
+          <button
+            type="button"
+            onClick={syncNow}
+            disabled={isSyncing}
+            className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-white px-4 text-sm font-semibold text-[#064123] transition hover:-translate-y-0.5 hover:bg-green-100 active:translate-y-0 disabled:cursor-not-allowed disabled:opacity-70"
+          >
+            <RotateCcw
+              className={`h-4 w-4 ${isSyncing ? "animate-spin" : ""}`}
+            />
+            {isSyncing ? "Syncing" : "Sync Now"}
           </button>
         </div>
 

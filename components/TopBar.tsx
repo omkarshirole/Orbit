@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { clsx } from "clsx";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Bell,
   ChevronDown,
@@ -12,6 +14,7 @@ import {
   Settings,
 } from "lucide-react";
 import { Avatar } from "./ui/avatar";
+import { useToast } from "./toast-provider";
 
 interface Notification {
   id: number;
@@ -45,13 +48,49 @@ const notifications: Notification[] = [
   },
 ];
 
-const unreadCount = notifications.filter((n) => !n.read).length;
-
 export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
+  const router = useRouter();
+  const { notify } = useToast();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [notificationItems, setNotificationItems] = useState(notifications);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const notificationsRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+  const unreadCount = notificationItems.filter((n) => !n.read).length;
+
+  function submitSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    router.push(
+      query ? `/orders?search=${encodeURIComponent(query)}` : "/orders",
+    );
+    window.dispatchEvent(
+      new CustomEvent("orbit-search-change", { detail: query }),
+    );
+    notify(query ? `Showing results for "${query}"` : "Showing all orders");
+  }
+
+  function markAllRead() {
+    setNotificationItems((items) =>
+      items.map((item) => ({ ...item, read: true })),
+    );
+    notify("All notifications marked read");
+  }
+
+  function openNotification(id: number) {
+    setNotificationItems((items) =>
+      items.map((item) => (item.id === id ? { ...item, read: true } : item)),
+    );
+    setNotificationsOpen(false);
+    const route =
+      id === 1
+        ? "/orders/ord_apple"
+        : id === 2
+          ? "/orders/ord_nike"
+          : "/orders/ord_flipkart";
+    router.push(route);
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -83,7 +122,12 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
           <Menu className="h-6 w-6" />
         </button>
 
-        <div className="min-w-0 flex-1">
+        <form
+          className="min-w-0 flex-1"
+          action="/orders"
+          method="get"
+          onSubmit={submitSearch}
+        >
           <div className="relative w-full max-w-md">
             <Search
               className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8d9890]"
@@ -91,6 +135,9 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
             />
             <input
               type="search"
+              name="search"
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
               placeholder="Search orders, stores, tracking"
               className="h-11 w-full rounded-full border border-transparent bg-[#f7f8f6] pl-10 pr-14 text-sm text-[#111111] shadow-inner placeholder-[#8d9890] focus:border-[#168252]/40 focus:outline-none focus:ring-2 focus:ring-green-500/20"
               aria-label="Search orders"
@@ -99,15 +146,16 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
               Ctrl F
             </kbd>
           </div>
-        </div>
+        </form>
 
         <div className="flex items-center gap-2">
-          <button
+          <Link
+            href="/gmail-sync"
             className="relative grid h-11 w-11 place-items-center rounded-full bg-white text-[#7d8880] shadow-sm transition hover:text-[#0f6b42]"
             aria-label="Gmail"
           >
             <Mail className="h-5 w-5" />
-          </button>
+          </Link>
 
           <div className="relative" ref={notificationsRef}>
             <button
@@ -130,14 +178,20 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
                   <h2 className="font-semibold text-[#111111]">
                     Notifications
                   </h2>
-                  <button className="text-xs font-semibold text-[#0f6b42] hover:text-[#064123]">
+                  <button
+                    type="button"
+                    onClick={markAllRead}
+                    className="text-xs font-semibold text-[#0f6b42] hover:text-[#064123]"
+                  >
                     Mark all read
                   </button>
                 </div>
                 <div className="max-h-96 divide-y divide-[#edf0ec] overflow-y-auto">
-                  {notifications.map((notification) => (
+                  {notificationItems.map((notification) => (
                     <button
                       key={notification.id}
+                      type="button"
+                      onClick={() => openNotification(notification.id)}
                       className="flex w-full items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-[#f7f8f6]"
                     >
                       <div
@@ -219,18 +273,30 @@ export function TopBar({ onMenuClick }: { onMenuClick: () => void }) {
                   </div>
                 </div>
                 <div className="divide-y divide-[#edf0ec]">
-                  <button className="flex w-full items-center gap-3 px-3 py-2 text-sm text-[#8d9890] hover:bg-[#f7f8f6] hover:text-[#111111]">
+                  <Link
+                    href="/gmail-sync"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="flex w-full items-center gap-3 px-3 py-2 text-sm text-[#8d9890] hover:bg-[#f7f8f6] hover:text-[#111111]"
+                  >
                     <Mail className="h-4 w-4" />
                     Gmail Access
-                  </button>
-                  <button className="flex w-full items-center gap-3 px-3 py-2 text-sm text-[#8d9890] hover:bg-[#f7f8f6] hover:text-[#111111]">
+                  </Link>
+                  <Link
+                    href="/settings"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="flex w-full items-center gap-3 px-3 py-2 text-sm text-[#8d9890] hover:bg-[#f7f8f6] hover:text-[#111111]"
+                  >
                     <Settings className="h-4 w-4" />
                     Settings
-                  </button>
-                  <button className="flex w-full items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50">
+                  </Link>
+                  <Link
+                    href="/auth"
+                    onClick={() => setUserMenuOpen(false)}
+                    className="flex w-full items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50"
+                  >
                     <LogOut className="h-4 w-4" />
                     Logout
-                  </button>
+                  </Link>
                 </div>
               </div>
             )}

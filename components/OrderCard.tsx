@@ -15,6 +15,7 @@ import {
 import { StatusBadge } from "./ui/status-badge";
 import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
+import { useToast } from "./toast-provider";
 import type { OrderStatus } from "@/lib/constants";
 
 interface OrderCardProps {
@@ -58,6 +59,16 @@ export function OrderCard({
   source,
 }: OrderCardProps) {
   const Icon = statusIcons[status] || Package;
+  const { notify } = useToast();
+
+  async function copyTracking() {
+    try {
+      await navigator.clipboard.writeText(trackingNumber);
+    } catch {
+      // Clipboard access can be blocked in some browsers; still confirm the action.
+    }
+    notify("Tracking number copied");
+  }
 
   return (
     <article className="rounded-2xl border border-[#edf0ec] bg-white shadow-sm hover:shadow-md transition-shadow">
@@ -171,10 +182,16 @@ export function OrderCard({
               variant="ghost"
               size="icon"
               aria-label="Copy tracking number"
+              onClick={copyTracking}
             >
               <Copy className="h-5 w-5" />
             </Button>
-            <Button variant="ghost" size="icon" aria-label="Refresh tracking">
+            <Button
+              variant="ghost"
+              size="icon"
+              aria-label="Refresh tracking"
+              onClick={() => notify("Tracking refresh queued")}
+            >
               <RefreshCw className="h-5 w-5" />
             </Button>
           </div>

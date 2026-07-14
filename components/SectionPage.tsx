@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -18,6 +20,7 @@ import { OrbitAppShell } from "./OrbitAppShell";
 import { Button } from "./ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { StatusBadge } from "./ui/status-badge";
+import { useToast } from "./toast-provider";
 import type { OrderStatus } from "@/lib/constants";
 
 type SectionKind =
@@ -152,15 +155,80 @@ const copy: Record<
   },
 };
 
-export function SectionPage({ kind }: { kind: SectionKind }) {
+export function SectionPage({
+  kind,
+  initialSearch = "",
+}: {
+  kind: SectionKind;
+  initialSearch?: string;
+}) {
+  const router = useRouter();
+  const { notify } = useToast();
+  const [search, setSearch] = useState(initialSearch.trim().toLowerCase());
   const page = copy[kind];
+
+  useEffect(() => {
+    const updateSearch = () => {
+      const params = new URLSearchParams(window.location.search);
+      setSearch(params.get("search")?.trim().toLowerCase() || "");
+    };
+    const updateFromEvent = (event: Event) => {
+      setSearch(
+        event instanceof CustomEvent
+          ? String(event.detail || "")
+              .trim()
+              .toLowerCase()
+          : "",
+      );
+    };
+    updateSearch();
+    window.addEventListener("popstate", updateSearch);
+    window.addEventListener("orbit-search-change", updateFromEvent);
+    return () => {
+      window.removeEventListener("popstate", updateSearch);
+      window.removeEventListener("orbit-search-change", updateFromEvent);
+    };
+  }, []);
+
+  const filtered = useMemo(() => {
+    const visibleOrders = getOrdersForKind(kind);
+    if (!search) return visibleOrders;
+    return visibleOrders.filter((order) =>
+      [order.product, order.store, order.courier, order.tracking, order.eta]
+        .join(" ")
+        .toLowerCase()
+        .includes(search),
+    );
+  }, [kind, search]);
+
+  function exportOrders() {
+    const header = ["Product", "Store", "Courier", "Tracking", "ETA", "Value"];
+    const rows = filtered.map((order) => [
+      order.product,
+      order.store,
+      order.courier,
+      order.tracking,
+      order.eta,
+      order.value,
+    ]);
+    const csv = [header, ...rows]
+      .map((row) =>
+        row.map((cell) => `"${cell.replaceAll('"', '""')}"`).join(","),
+      )
+      .join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = `${kind}-orders.csv`;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    notify(`${filtered.length} orders exported`);
+  }
 
   if (kind === "gmailSync") return <GmailSyncPage page={page} />;
   if (kind === "connections") return <ConnectionsPage page={page} />;
   if (kind === "settings") return <SettingsPage page={page} />;
   if (kind === "help") return <HelpPage page={page} />;
-
-  const filtered = getOrdersForKind(kind);
 
   return (
     <OrbitAppShell
@@ -169,11 +237,21 @@ export function SectionPage({ kind }: { kind: SectionKind }) {
       description={page.description}
       actions={
         <>
-          <Button variant="outline" className="border-[#0f6b42]/35 bg-white">
+          <Button
+            variant="outline"
+            className="border-[#0f6b42]/35 bg-white"
+            onClick={exportOrders}
+          >
             <Download className="mr-2 h-4 w-4" />
             Export
           </Button>
-          <Button className="bg-gradient-to-br from-[#168252] to-[#064123]">
+          <Button
+            className="bg-gradient-to-br from-[#168252] to-[#064123]"
+            onClick={() => {
+              router.push("/dashboard");
+              notify("Open Add Order from the dashboard header");
+            }}
+          >
             <Package className="mr-2 h-4 w-4" />
             Add Order
           </Button>
@@ -185,7 +263,7 @@ export function SectionPage({ kind }: { kind: SectionKind }) {
           <CardHeader className="flex items-center justify-between">
             <CardTitle>{page.title}</CardTitle>
             <span className="rounded-full bg-[#f7f8f6] px-3 py-1 text-xs font-semibold text-[#78837b]">
-              {filtered.length} orders
+              {filtered.length} {search ? "matches" : "orders"}
             </span>
           </CardHeader>
           <CardContent className="space-y-3 pt-0">
@@ -224,6 +302,11 @@ export function SectionPage({ kind }: { kind: SectionKind }) {
                 </div>
               </Link>
             ))}
+            {filtered.length === 0 && (
+              <div className="rounded-[22px] border border-dashed border-[#dfe8df] bg-white p-6 text-center text-sm font-semibold text-[#78837b]">
+                No orders match this search.
+              </div>
+            )}
           </CardContent>
         </Card>
         <OrderSummary kind={kind} />
@@ -295,15 +378,29 @@ function OrderSummary({ kind }: { kind: SectionKind }) {
 }
 
 function GmailSyncPage({ page }: { page: (typeof copy)[SectionKind] }) {
+  const { notify } = useToast();
+  const [isSyncing, setIsSyncing] = useState(false);
+
+  async function syncNow() {
+    setIsSyncing(true);
+    await new Promise((resolve) => window.setTimeout(resolve, 650));
+    setIsSyncing(false);
+    notify("Gmail sync queued");
+  }
+
   return (
     <OrbitAppShell
       eyebrow={page.eyebrow}
       title={page.title}
       description={page.description}
       actions={
-        <Button className="bg-gradient-to-br from-[#168252] to-[#064123]">
+        <Button
+          className="bg-gradient-to-br from-[#168252] to-[#064123]"
+          onClick={syncNow}
+          isLoading={isSyncing}
+        >
           <RefreshCcw className="mr-2 h-4 w-4" />
-          Sync Gmail
+          {isSyncing ? "Syncing" : "Sync Gmail"}
         </Button>
       }
     >
@@ -351,6 +448,7 @@ function GmailSyncPage({ page }: { page: (typeof copy)[SectionKind] }) {
 }
 
 function ConnectionsPage({ page }: { page: (typeof copy)[SectionKind] }) {
+  const { notify } = useToast();
   const cards = [
     [
       "Gmail",
@@ -391,6 +489,7 @@ function ConnectionsPage({ page }: { page: (typeof copy)[SectionKind] }) {
               <Button
                 variant="outline"
                 className="mt-5 border-[#0f6b42]/35 bg-white"
+                onClick={() => notify(`${String(title)} action opened`, "info")}
               >
                 {String(action)}
               </Button>

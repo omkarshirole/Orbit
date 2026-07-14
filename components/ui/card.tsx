@@ -33,7 +33,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(
       <div
         ref={ref}
         className={clsx(
-          "rounded-[24px] transition-shadow duration-200",
+          "rounded-[24px] transition-all duration-200 ease-out",
           variants[variant],
           paddings[padding],
           className,

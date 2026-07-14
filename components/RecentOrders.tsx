@@ -2,6 +2,7 @@
 
 import { clsx } from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   AlertTriangle,
   CheckCircle2,
@@ -13,6 +14,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { StatusBadge } from "./ui/status-badge";
 import { Button } from "./ui/button";
+import { useToast } from "./toast-provider";
 
 const orders = [
   {
@@ -66,11 +68,22 @@ const statusIcons = {
 };
 
 export function RecentOrders() {
+  const router = useRouter();
+  const { notify } = useToast();
+
   return (
     <Card>
       <CardHeader className="flex items-center justify-between pb-2">
         <CardTitle>Recent Orders</CardTitle>
-        <Button variant="outline" size="sm" className="border-[#0f6b42]/30">
+        <Button
+          variant="outline"
+          size="sm"
+          className="border-[#0f6b42]/30"
+          onClick={() => {
+            router.push("/dashboard");
+            notify("Use Add Order in the dashboard header");
+          }}
+        >
           <Plus className="mr-1 h-3.5 w-3.5" />
           New
         </Button>

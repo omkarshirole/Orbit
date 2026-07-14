@@ -55,6 +55,13 @@ const groups: NavGroup[] = [
   { label: "GENERAL", items: GENERAL_ITEMS },
 ];
 
+const ORDER_CATEGORY_PATHS = new Set([
+  "/orders/active",
+  "/orders/in-transit",
+  "/orders/delivered",
+  "/orders/delayed",
+]);
+
 export function Sidebar({
   isOpen,
   onClose,
@@ -101,10 +108,7 @@ export function Sidebar({
                 </p>
                 <ul className="space-y-1" role="list">
                   {group.items.map((item) => {
-                    const isActive =
-                      pathname === item.href ||
-                      (item.href !== "/dashboard" &&
-                        pathname.startsWith(item.href + "/"));
+                    const isActive = isActiveNavItem(pathname, item.href);
                     const Icon = item.icon;
                     return (
                       <li key={item.label}>
@@ -155,10 +159,14 @@ export function Sidebar({
                 <p className="mt-1 text-xs leading-5 text-green-100">
                   Gmail read-only. No email edits.
                 </p>
-                <button className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-white/15 px-3 py-2 text-xs font-semibold transition-colors hover:bg-white/25">
+                <Link
+                  href="/connections"
+                  onClick={onClose}
+                  className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-white/15 px-3 py-2 text-xs font-semibold transition-colors hover:bg-white/25"
+                >
                   Manage access
                   <ChevronRight className="h-3 w-3" />
-                </button>
+                </Link>
               </div>
             </div>
           </div>
@@ -166,4 +174,15 @@ export function Sidebar({
       </aside>
     </>
   );
+}
+
+function isActiveNavItem(pathname: string, href: string) {
+  if (pathname === href) return true;
+  if (href === "/dashboard") return false;
+  if (href === "/orders") {
+    return (
+      pathname.startsWith("/orders/") && !ORDER_CATEGORY_PATHS.has(pathname)
+    );
+  }
+  return pathname.startsWith(href + "/");
 }

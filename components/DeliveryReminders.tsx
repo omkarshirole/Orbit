@@ -2,8 +2,10 @@
 
 import { AlertTriangle, Clock, Truck } from "lucide-react";
 import { clsx } from "clsx";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Button } from "./ui/button";
+import { useToast } from "./toast-provider";
 
 const reminders = [
   {
@@ -19,6 +21,9 @@ const reminders = [
 ];
 
 export function DeliveryReminders() {
+  const router = useRouter();
+  const { notify } = useToast();
+
   return (
     <Card className="h-full">
       <CardHeader>
@@ -36,6 +41,10 @@ export function DeliveryReminders() {
             variant="primary"
             size="md"
             className="mt-5 w-full bg-gradient-to-br from-[#168252] to-[#064123]"
+            onClick={() => {
+              router.push("/orders/ord_apple");
+              notify("Opening AirPods shipment");
+            }}
           >
             <Truck className="mr-2 h-4 w-4" />
             View Shipment

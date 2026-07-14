@@ -1,12 +1,7 @@
 import Link from "next/link";
-import {
-  ArrowLeft,
-  Copy,
-  ExternalLink,
-  RefreshCcw,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { OrbitAppShell } from "@/components/OrbitAppShell";
+import { OrderDetailActions } from "@/components/OrderDetailActions";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import type { OrderStatus } from "@/lib/constants";
@@ -92,22 +87,10 @@ export default async function OrderDetailsPage({
                 <StatusBadge status={order.status} />
               </div>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {[
-                ["Copy tracking", Copy],
-                ["Open courier", ExternalLink],
-                ["Refresh", RefreshCcw],
-                ["Delete", Trash2],
-              ].map(([label, Icon]) => (
-                <button
-                  key={label as string}
-                  className="inline-flex items-center gap-2 rounded-full border border-[#edf0ec] bg-white px-3 py-2 text-sm font-semibold text-[#111111] hover:bg-[#f7f8f6]"
-                >
-                  <Icon className="h-4 w-4" />
-                  {label as string}
-                </button>
-              ))}
-            </div>
+            <OrderDetailActions
+              trackingNumber={order.tracking}
+              courier={order.courier}
+            />
           </CardHeader>
           <CardContent className="grid gap-3 pt-0 md:grid-cols-4">
             {[
