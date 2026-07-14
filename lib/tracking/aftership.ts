@@ -120,8 +120,11 @@ export function parseAfterShipWebhook(payload: AfterShipWebhookPayload): {
 } {
   const tracking =
     payload?.msg || payload?.data?.tracking || payload?.tracking || {};
-  const checkpoints =
-    tracking.checkpoints || tracking.checkpoint ? [tracking.checkpoint] : [];
+  const checkpoints = tracking.checkpoints
+    ? [...tracking.checkpoints]
+    : tracking.checkpoint
+      ? [tracking.checkpoint]
+      : [];
   const events = checkpoints
     .filter((checkpoint): checkpoint is AfterShipCheckpoint =>
       Boolean(checkpoint),

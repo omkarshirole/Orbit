@@ -11,13 +11,43 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.PUBLIC_APP_URL || "http://localhost:3000"),
 };
 
+const RTRVR_ATTRS = [
+  "rtrvr-ls",
+  "rtrvr-mw-ready",
+  "rtrvr-react",
+  "rtrvr-gl-click",
+  "rtrvr-gl-input",
+  "rtrvr-gl-keydown",
+  "rtrvr-mw-busy",
+];
+
+const stripRtrvrAttrs = `
+  (function () {
+    var attrs = ${JSON.stringify(RTRVR_ATTRS)};
+    function clean() {
+      var i, j;
+      for (i = 0; i < attrs.length; i++) {
+        var nodes = document.querySelectorAll("[" + attrs[i] + "]");
+        for (j = 0; j < nodes.length; j++) {
+          nodes[j].removeAttribute(attrs[i]);
+        }
+      }
+    }
+    clean();
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", clean);
+    }
+  })();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
         <QueryProvider>{children}</QueryProvider>
+        <script dangerouslySetInnerHTML={{ __html: stripRtrvrAttrs }} />
       </body>
     </html>
   );

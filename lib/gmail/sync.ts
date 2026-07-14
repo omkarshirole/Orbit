@@ -70,24 +70,6 @@ export async function syncGmailOrders(
     throw new Error("Gmail is not connected.");
   }
 
-  let accessToken = decryptToken(tokenRow.encrypted_access_token);
-  if (new Date(tokenRow.token_expiry).getTime() < Date.now() + 60_000) {
-    const refreshed = await refreshGmailAccessToken(
-      decryptToken(tokenRow.encrypted_refresh_token),
-    );
-    accessToken = refreshed.access_token;
-    await supabase
-      .from("gmail_tokens")
-      .update({
-        encrypted_access_token: encryptToken(refreshed.access_token),
-        token_expiry: new Date(
-          Date.now() + refreshed.expires_in * 1000,
-        ).toISOString(),
-        provider_scope: refreshed.scope || tokenRow.provider_scope,
-      })
-      .eq("user_id", userId);
-  }
-
   const { data: syncRun } = await supabase
     .from("gmail_sync_runs")
     .insert({
@@ -99,6 +81,23 @@ export async function syncGmailOrders(
     .single();
 
   try {
+    let accessToken = decryptToken(tokenRow.encrypted_access_token);
+    if (new Date(tokenRow.token_expiry).getTime() < Date.now() + 60_000) {
+      const refreshed = await refreshGmailAccessToken(
+        decryptToken(tokenRow.encrypted_refresh_token),
+      );
+      accessToken = refreshed.access_token;
+      await supabase
+        .from("gmail_tokens")
+        .update({
+          encrypted_access_token: encryptToken(refreshed.access_token),
+          token_expiry: new Date(
+            Date.now() + refreshed.expires_in * 1000,
+          ).toISOString(),
+          provider_scope: refreshed.scope || tokenRow.provider_scope,
+        })
+        .eq("user_id", userId);
+    }
     const list = await gmailFetch<{ messages?: { id: string }[] }>(
       accessToken,
       `messages?q=${encodeURIComponent(GMAIL_ORDER_QUERY)}&maxResults=25`,
@@ -127,7 +126,7 @@ export async function syncGmailOrders(
 
         const { data: existing } = await supabase
           .from("orders")
-          .select("id")
+          .select("id, shipments!inner(tracking_number)")
           .eq("user_id", userId)
           .or(
             [

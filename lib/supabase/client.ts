@@ -9,7 +9,9 @@ export function createSupabaseBrowserClient() {
     process.env.SUPABASE_PUBLISHABLE_KEY;
 
   if (!url || !key) {
-    throw new Error("Supabase browser environment is not configured.");
+    throw new Error(
+      "Supabase browser environment is not configured. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or SUPABASE_URL and SUPABASE_PUBLISHABLE_KEY for server-only builds).",
+    );
   }
 
   return createBrowserClient(url, key);

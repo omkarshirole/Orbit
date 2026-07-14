@@ -66,8 +66,8 @@ export function normalizeStatus(input?: string | null): OrderStatus {
   if (/process|packed|preparing/.test(value)) return "processing";
   if (/confirm/.test(value)) return "confirmed";
   if (/order|placed|received/.test(value)) return "ordered";
-  return ORDER_STATUSES.includes(input as OrderStatus)
-    ? (input as OrderStatus)
+  return ORDER_STATUSES.includes(value as OrderStatus)
+    ? (value as OrderStatus)
     : "unknown";
 }
 
